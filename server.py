@@ -10,8 +10,15 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.gen import engine, Task, coroutine
 import tornado.ioloop
 import tornado.web
+import hashlib, uuid
+
+salt = uuid.uuid4().hex
 
 db = MotorClient()['ppa']
+
+class MainHandler(RequestHandler):
+	def get(self):
+		self.render('templates/login.html')
 
 class LoginHandler(RequestHandler):
 	@removeslash
@@ -29,8 +36,11 @@ class SignUpHandler(RequestHandler):
 		password = self.get_argument('password')
 		writeData = {'username':username,'password':password}
 		db = self.settings['db']
-		print(username)
-		self.render('login.html')
+		#db.insert({'uname':username})
+		self.write(username)
+
+class 
+
 
 
 class clientServer(RequestHandler):
@@ -38,8 +48,10 @@ class clientServer(RequestHandler):
 	def post(self):
 		writeData = {}		
 
-application = tornado.web.Application([(r'/login', LoginHandler),
-	(r'/',LoginHandler)
+
+
+application = tornado.web.Application([(r'/', MainHandler),
+	(r'/login',SignUpHandler)
 	],db = db,debug=True)
  
 #main init

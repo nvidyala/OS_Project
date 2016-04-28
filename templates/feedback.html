@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>User Feedback</h2>
+  <table>
+  <TD><center><b>ID</b></center></TD>
+  <TD><b>E - Mail</b></TD>
+  <TD><center><b>Time</b></center></TD>
+  <TD><center><b>Response</b></center></TD> 
+  {% for i in item%}
+  <TR>
+      <TD class  = 'Feedback' style="padding:0 15px 0 15px;">{{i.id}}</TD>
+      <TD class  = 'Feedback' style="padding:0 15px 0 15px;">{{i.email}}</TD>
+      <TD class  = 'Feedback' style="padding:0 15px 0 15px;">{{i.time_stamp}}</TD>
+      <TD class  = 'Feedback' style="padding:0 15px 0 15px;">{{i.response}}</TD>
+  </TR>      
+  {% endfor %}
+  </table>   
+  {% endblock %} 

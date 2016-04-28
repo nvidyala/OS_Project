@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>User Access</h2>
+  <table>
+  <TD><center><b>ID</b></center></TD>
+  <TD><center><b>First Name</b></center></TD>
+  <TD><center><b>Last Name</b></center></TD>
+  <TD><b>E - Mail</b></TD>
+  <TD><center><b>Phone</b></center></TD>
+  <TD><center><b>Time</b></center></TD>
+  <TD><center><b>Access</b></center></TD> 
+  <TD><center><b>Access Count</b></center></TD>
+  <TD><center><b>Revoke Access</b></center></TD>  
+  {% for i in item%}
+  <TR>
+      <TD class = 'User' style="padding:0 15px 0 15px;">{{i.id}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.fname}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.lname}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.email}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.phone}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.time_stamp}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.access}}</TD>
+      <TD class  = 'User' style="padding:0 15px 0 15px;">{{i.accessCount}}</TD>
+      <TD><form action="{{ url_for('auth') }}" method=post>
+          <dl>
+          <dd><input type=text name=userID>
+          <dd><input type='submit' name = 'access' value='Disable Access'>
+          </dl>
+      </form></TD>
+  </TR>      
+  {% endfor %}
+  </table>   
+  {% endblock %} 

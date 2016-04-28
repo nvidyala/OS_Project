@@ -1,6 +1,11 @@
 import platform
 import psutil
 import sys
+import json
+import urllib2
+import os
+
+os.environ['no_proxy'] = '127.0.0.1,localhost'
 
 def bytes_norm(n):
     symbols = ('K', 'M', 'G', 'T')
@@ -37,10 +42,12 @@ def main():
 
         sys_info_arr.append(sys_info)  # sys_info_arr stores memory details of each physical drive
 
-        os_arr.append({'OS ': ' '.join([platform.system(), platform.release()])})
+        os_arr.append({'OS': ' '.join([platform.system(), platform.release()])})
         os_arr.append(sys_info_arr)  # os_arr contains os details in first element, second element is sys_info_arr
-
-    print(os_arr)
-
+    
+    print(json.dumps(os_arr))
+    req = urllib2.Request('http://127.0.0.1:6969/clientServer')
+    req.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(req,json.dumps(os_arr))    
 
 if __name__=="__main__": main()

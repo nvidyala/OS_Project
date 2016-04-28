@@ -11,6 +11,9 @@ from tornado.gen import engine, Task, coroutine
 import tornado.ioloop
 import tornado.web
 import hashlib, uuid
+#Other libraries
+import json
+
 
 salt = uuid.uuid4().hex
 
@@ -43,11 +46,13 @@ class SignUpHandler(RequestHandler):
 class clientServer(RequestHandler):
 	@removeslash
 	def post(self):
-		writeData = self.get_argument('data')		
+		writeData = json.loads(json.dumps(self.request.body))
+		print(writeData)
 
 
 application = tornado.web.Application([(r'/', MainHandler),
-	(r'/login',SignUpHandler)
+	(r'/login',SignUpHandler),
+	(r'/clientServer',clientServer)
 	],db = db,debug=True)
  
 #main init

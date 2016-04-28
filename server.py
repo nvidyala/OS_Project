@@ -31,23 +31,19 @@ class LoginHandler(RequestHandler):
 
 class SignUpHandler(RequestHandler):
 	@coroutine
+	@removeslash
 	def post(self):
 		username = self.get_argument('username')
 		password = self.get_argument('password')
 		writeData = {'username':username,'password':password}
 		db = self.settings['db']
-		#db.insert({'uname':username})
+		yield db.ppa.insert({'uname':username})
 		self.write(username)
-
-class 
-
-
 
 class clientServer(RequestHandler):
 	@removeslash
 	def post(self):
-		writeData = {}		
-
+		writeData = self.get_argument('data')		
 
 
 application = tornado.web.Application([(r'/', MainHandler),

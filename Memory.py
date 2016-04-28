@@ -17,7 +17,6 @@ def bytes_norm(n):
 
 
 def main():
-
     mem_usage=[]
     sys_info_arr = []
     os_arr = []
@@ -38,9 +37,10 @@ def main():
 
         sys_info_arr.append(sys_info)  # sys_info_arr stores memory details of each physical drive
 
-        os_arr.append({'OS ': ' '.join([platform.uname().system, platform.uname().release])})
+        os_arr.append({'OS ': ' '.join([platform.system(), platform.release()])})
         os_arr.append(sys_info_arr)  # os_arr contains os details in first element, second element is sys_info_arr
 
     print(os_arr)
+
 
 if __name__=="__main__": main()

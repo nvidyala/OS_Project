@@ -19,35 +19,28 @@ def bytes_norm(n):
 def main():
 
     mem_usage=[]
-    sys_mem_arr=[]
+    sys_info_arr = []
+    os_arr = []
 
     for part in psutil.disk_partitions(all=False):
         if part.fstype == '':
             continue
 
-        y=""
-        mem_usage+=psutil.disk_usage(part.mountpoint)        #stores memory as (total,used,free,percent)
-        y=''.join(part.device)
+        y = ""
+        mem_usage += psutil.disk_usage(part.mountpoint)  # stores memory as (total,used,free,percent)
+        y = ''.join(part.device)
 
-        sys_mem = {'Total': bytes_norm(psutil.disk_usage(part.mountpoint).total), 'Used':bytes_norm(psutil.disk_usage(part.mountpoint).used),
-                   'Free':bytes_norm(psutil.disk_usage(part.mountpoint).free), 'Percent':psutil.disk_usage(part.mountpoint).percent,
-                   'Device': y}
+        sys_info = {'Total': bytes_norm(psutil.disk_usage(part.mountpoint).total),
+                    'Used': bytes_norm(psutil.disk_usage(part.mountpoint).used),
+                    'Free': bytes_norm(psutil.disk_usage(part.mountpoint).free),
+                    'Percent': psutil.disk_usage(part.mountpoint).percent,
+                    'Device': y}
 
-        sys_mem_arr.append(sys_mem)
+        sys_info_arr.append(sys_info)  # sys_info_arr stores memory details of each physical drive
 
+        os_arr.append({'OS ': ' '.join([platform.uname().system, platform.uname().release])})
+        os_arr.append(sys_info_arr)  # os_arr contains os details in first element, second element is sys_info_arr
 
-
-    print(sys_mem_arr)
-
-    it=iter(mem_usage)
-    mem_usage=(list(zip(it,it,it,it)))
-
-
-
-
+    print(os_arr)
 
 if __name__=="__main__": main()
-
-
-
-#create platform.uname() to dict

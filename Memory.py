@@ -4,13 +4,19 @@ import sys
 import json
 import urllib2
 import os
+import datetime
+
+  git config --global user.email "nikhil.kasukurthi@gmail.com"
+  git config --global user.name "Nikhil Kasukurthi"
 
 os.environ['no_proxy'] = '127.0.0.1,localhost'
+#ENTER YOUR USERNAME HERE
+uname = 'first'
+flag = False
 
 def bytes_norm(n):
     symbols = ('K', 'M', 'G', 'T')
     prefix = {}
-
     for i, s in enumerate(symbols):
         prefix[s] = 1 << (i + 1) * 10
 
@@ -21,11 +27,26 @@ def bytes_norm(n):
     return '%sB' % n
 
 
-def main():
+def clientInfo():
+        flag = True
+        print("Client")
+        os={'uname':uname,'OS': platform.system()+' '+platform.release()}
+        req = urllib2.Request('http://127.0.0.1:6969/clientInfoInsert')
+        req.add_header('Content-Type', 'application/json')
+        urllib2.urlopen(req,json.dumps(os))
+        sysInfo()
+
+def Main():
+    if flag == False:
+        clientInfo()
+    else: 
+        sysInfo()               
+
+def sysInfo():
     mem_usage=[]
     sys_info_arr = []
-    os_arr = []
 
+    print("SYS INFO")
     for part in psutil.disk_partitions(all=False):
         if part.fstype == '':
             continue
@@ -34,20 +55,46 @@ def main():
         mem_usage += psutil.disk_usage(part.mountpoint)  # stores memory as (total,used,free,percent)
         y = ''.join(part.device)
 
-        sys_info = {'Total': bytes_norm(psutil.disk_usage(part.mountpoint).total),
+        sys_info = {
+                    'Total': bytes_norm(psutil.disk_usage(part.mountpoint).total),
                     'Used': bytes_norm(psutil.disk_usage(part.mountpoint).used),
                     'Free': bytes_norm(psutil.disk_usage(part.mountpoint).free),
                     'Percent': psutil.disk_usage(part.mountpoint).percent,
-                    'Device': y}
+                    'Device': y,
+                    }
 
         sys_info_arr.append(sys_info)  # sys_info_arr stores memory details of each physical drive
-
-        os_arr.append({'OS': ' '.join([platform.system(), platform.release()])})
-        os_arr.append(sys_info_arr)  # os_arr contains os details in first element, second element is sys_info_arr
     
-    print(json.dumps(os_arr))
-    req = urllib2.Request('http://127.0.0.1:6969/clientServer')
-    req.add_header('Content-Type', 'application/json')
-    response = urllib2.urlopen(req,json.dumps(os_arr))    
+    print("SHIUT:\n")
+    print(json.dumps(sys_info_arr))
+    jsonData = {}
+    jsonData['uname'] = uname
+    jsonData['CPU Percent'] = psutil.cpu_percent()
+    jsonData['System Stats'] =  sys_info_arr
+    req2 = urllib2.Request('http://127.0.0.1:6969/clientInsertServerStats')
+    req2.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(req2,json.dumps(jsonData))
+    networkInfo() 
+        
+def networkInfo():    
+    network_arr=[]
+    temp=[]
 
-if __name__=="__main__": main()
+    temp=psutil.net_io_counters(pernic=True)
+
+    for nic in psutil.net_io_counters(pernic=True):
+        x={'NIC':nic,'Bytes sent': temp[nic].bytes_sent,'Bytes received':temp[nic].bytes_recv,'Packets Sent':temp[nic].packets_sent,
+           'Packet received':temp[nic].packets_recv}
+        network_arr.append(x)
+    data = {}
+    data['uname'] = uname
+    data['Network data'] = network_arr
+    data['time'] =  str(datetime.datetime.now())
+    req2 = urllib2.Request('http://127.0.0.1:6969/networkInfoInsert')
+    req2.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(req2,json.dumps(data))
+
+
+#main init
+if __name__ == "__main__":
+    Main()

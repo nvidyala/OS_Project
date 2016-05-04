@@ -6,13 +6,14 @@ import urllib2
 import os
 import datetime
 
-  git config --global user.email "nikhil.kasukurthi@gmail.com"
-  git config --global user.name "Nikhil Kasukurthi"
 
 os.environ['no_proxy'] = '127.0.0.1,localhost'
 #ENTER YOUR USERNAME HERE
-uname = 'first'
+uname = 'two'
 flag = False
+
+ip = '162.243.66.62:6969'
+#ip = '127.0.0.1:6969'
 
 def bytes_norm(n):
     symbols = ('K', 'M', 'G', 'T')
@@ -23,15 +24,17 @@ def bytes_norm(n):
     for i in reversed(symbols):
         if (n >= prefix[i]):
             value = float(n) / prefix[i]
-            return '%.2f%s' % (value, i)
+            return '%.2f' % (value)
     return '%sB' % n
 
 
 def clientInfo():
         flag = True
         print("Client")
-        os={'uname':uname,'OS': platform.system()+' '+platform.release()}
-        req = urllib2.Request('http://127.0.0.1:6969/clientInfoInsert')
+        os={'uname':uname,'node': platform.node(),
+        'system':platform.system(),
+        'release':platform.release()}
+        req = urllib2.Request('http://'+ip+'/clientInfoInsert')
         req.add_header('Content-Type', 'application/json')
         urllib2.urlopen(req,json.dumps(os))
         sysInfo()
@@ -43,7 +46,7 @@ def Main():
         sysInfo()               
 
 def sysInfo():
-    mem_usage=[]
+    
     sys_info_arr = []
 
     print("SYS INFO")
@@ -52,7 +55,6 @@ def sysInfo():
             continue
 
         y = ""
-        mem_usage += psutil.disk_usage(part.mountpoint)  # stores memory as (total,used,free,percent)
         y = ''.join(part.device)
 
         sys_info = {
@@ -71,7 +73,7 @@ def sysInfo():
     jsonData['uname'] = uname
     jsonData['CPU Percent'] = psutil.cpu_percent()
     jsonData['System Stats'] =  sys_info_arr
-    req2 = urllib2.Request('http://127.0.0.1:6969/clientInsertServerStats')
+    req2 = urllib2.Request('http://'+ip+'/clientInsertServerStats')
     req2.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(req2,json.dumps(jsonData))
     networkInfo() 
@@ -90,7 +92,7 @@ def networkInfo():
     data['uname'] = uname
     data['Network data'] = network_arr
     data['time'] =  str(datetime.datetime.now())
-    req2 = urllib2.Request('http://127.0.0.1:6969/networkInfoInsert')
+    req2 = urllib2.Request('http://'+ip+'/networkInfoInsert')
     req2.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(req2,json.dumps(data))
 

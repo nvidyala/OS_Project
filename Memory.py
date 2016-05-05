@@ -9,7 +9,7 @@ import datetime
 
 os.environ['no_proxy'] = '127.0.0.1,localhost'
 #ENTER YOUR USERNAME HERE
-uname = 'two'
+uname = 'four'
 flag = False
 
 ip = '162.243.66.62:6969'
@@ -42,11 +42,11 @@ def clientInfo():
 def Main():
     if flag == False:
         clientInfo()
-    else: 
-        sysInfo()               
+    else:
+        sysInfo()
 
 def sysInfo():
-    
+
     sys_info_arr = []
 
     print("SYS INFO")
@@ -66,8 +66,8 @@ def sysInfo():
                     }
 
         sys_info_arr.append(sys_info)  # sys_info_arr stores memory details of each physical drive
-    
-    print("SHIUT:\n")
+
+
     print(json.dumps(sys_info_arr))
     jsonData = {}
     jsonData['uname'] = uname
@@ -76,9 +76,9 @@ def sysInfo():
     req2 = urllib2.Request('http://'+ip+'/clientInsertServerStats')
     req2.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(req2,json.dumps(jsonData))
-    networkInfo() 
-        
-def networkInfo():    
+    networkInfo()
+
+def networkInfo():
     network_arr=[]
     temp=[]
 
